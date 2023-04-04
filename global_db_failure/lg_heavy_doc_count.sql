@@ -6,10 +6,11 @@ with
 	FROM useview_telemetry
 	WHERE
 	  metric in (
-	    'tasks:load',
-	    'analytics:targets:load',
-	    'search:contacts',
-	    'search:reports'
+      'tasks:load',
+      'tasks:refresh',
+      'analytics:targets:load',
+      'search:contacts:types',
+      'search:reports'
 	  )
 	and period_start > '2022-10-01'::timestamptz 
 	group by 1

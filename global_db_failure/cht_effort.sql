@@ -49,8 +49,9 @@ from telemetry_metrics
 where 
   metric in (
     'tasks:load',
+    'tasks:refresh',
     'analytics:targets:load',
-    'search:contacts',
+    'search:contacts:types',
     'search:reports'
   )
   and period_start > now() - '300 days'::interval

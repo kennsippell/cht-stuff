@@ -6,10 +6,11 @@ with
 	FROM useview_telemetry
 	WHERE
 	  metric in (
-	    'tasks:load',
-	    'analytics:targets:load',
-	    'search:contacts',
-	    'search:reports'
+      'tasks:load',
+      'tasks:refresh',
+      'analytics:targets:load',
+      'search:contacts:types',
+      'search:reports'
 	  )
 	and period_start > '2022-10-01'::timestamptz 
 	group by 1
@@ -79,7 +80,7 @@ user_details as (
 )
 
 select 
-  chrome_version,
+  model,
   COUNT(*) as user_count,
   sum(global_failure_count) as global_failure_count,
   SUM(cht_effort) as cht_effort,

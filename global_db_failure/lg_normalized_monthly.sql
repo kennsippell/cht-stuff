@@ -7,11 +7,12 @@ with monthly_cht_effort as (
 	FROM useview_telemetry
 	WHERE
 	  metric in (
-	  'tasks:load',
-	  'analytics:targets:load',
-	  'search:contacts',
-	  'search:reports'
-	)
+      'tasks:load',
+      'tasks:refresh',
+      'analytics:targets:load',
+      'search:contacts:types',
+      'search:reports'
+	  )
 	group by 1
 	order by 1
 ),

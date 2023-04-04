@@ -7,7 +7,7 @@ with
 	WHERE
 	  metric in (
 	    'tasks:load',
-	    'targets:load',
+	    'analytics:targets:load',
 	    'search:contacts',
 	    'search:reports'
 	  )

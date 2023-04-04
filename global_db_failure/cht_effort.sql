@@ -49,7 +49,7 @@ from telemetry_metrics
 where 
   metric in (
     'tasks:load',
-    'targets:load',
+    'analytics:targets:load',
     'search:contacts',
     'search:reports'
   )

@@ -7,7 +7,7 @@ with monthly_cht_effort as (
 	WHERE
 	  metric in (
 	  'tasks:load',
-	  'targets:load',
+	  'analytics:targets:load',
 	  'search:contacts',
 	  'search:reports'
 	)

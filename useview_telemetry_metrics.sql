@@ -39,4 +39,7 @@ CROSS JOIN LATERAL jsonb_to_record(telemetry_docs_with_metric_blob.metric_values
 
 WITH DATA;
 
-
+CREATE UNIQUE INDEX useview_telemetry_metrics_docid_metric ON public.useview_telemetry_metrics USING btree (telemetry_doc_id, metric);
+CREATE INDEX useview_telemetry_metrics_period_start ON public.useview_telemetry_metrics USING btree (period_start);
+CREATE INDEX useview_telemetry_metrics_device_id ON public.useview_telemetry_metrics USING btree (device_id);
+CREATE INDEX useview_telemetry_metrics_user_name ON public.useview_telemetry_metrics USING btree (user_name);

@@ -26,6 +26,8 @@ SELECT
     END
   )::date AS period_start,
     
+
+  doc #>> '{_id}' AS telemetry_doc_id,
   doc #>> '{device,deviceInfo,hardware,manufacturer}' AS device_manufacturer,
   doc #>> '{device,deviceInfo,hardware,model}' AS device_model,
   
@@ -45,3 +47,5 @@ WHERE doc ->> 'type' = 'telemetry'
 ORDER BY 1, 2, 3 ASC
 
 WITH DATA;
+
+CREATE UNIQUE INDEX useview_telemetry_devices_device_user ON public.useview_telemetry_devices USING btree (device_id, user_name);

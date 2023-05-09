@@ -30,38 +30,38 @@ set
   method = x.comma_separated[3]::varchar(6),
   url = x.comma_separated[4]::text,
   url_bucket = case
-		when x.comma_separated[4] ~ '/_users/org.couchdb.user.*' then '~/_users/org.couchdb.user.*'
-		when x.comma_separated[4] ~ '/medic/org.couchdb.user.*' then '~/medic/org.couchdb.user.*'
-		when x.comma_separated[4] ~ '/_utils.*' then '~/_utils/.*'
-		when x.comma_separated[4] ~ '/medic-purged-role-.*' then '~/medic-purged-role-.*'
-		when x.comma_separated[4] ~ '/medic-logs.*' then '~/medic-logs.*'
-		when x.comma_separated[4] ~ '/medic-user-.*-meta.*' then '~/medic-user-.*-meta.*'
-		when x.comma_separated[4] ~ '/medic/_local/.*' then '~/medic/_local/.*'
-		when x.comma_separated[4] ~ '/medic-sentinel/.*-info' then '~/medic-sentinel/.*-info'
-		when x.comma_separated[4] ~ '/medic/form.*' then '~/medic/form.*'
-		when x.comma_separated[4] ~ '/medic/resources.*' then '~/medic/resources.*'
-		else substring(x.comma_separated[4] FROM '^([^\?]*).*')
-	end,
+    when x.comma_separated[4] ~ '/_users/org.couchdb.user.*' then '~/_users/org.couchdb.user.*'
+    when x.comma_separated[4] ~ '/medic/org.couchdb.user.*' then '~/medic/org.couchdb.user.*'
+    when x.comma_separated[4] ~ '/_utils.*' then '~/_utils/.*'
+    when x.comma_separated[4] ~ '/medic-purged-role-.*' then '~/medic-purged-role-.*'
+    when x.comma_separated[4] ~ '/medic-logs.*' then '~/medic-logs.*'
+    when x.comma_separated[4] ~ '/medic-user-.*-meta.*' then '~/medic-user-.*-meta.*'
+    when x.comma_separated[4] ~ '/medic/_local/.*' then '~/medic/_local/.*'
+    when x.comma_separated[4] ~ '/medic-sentinel/.*-info' then '~/medic-sentinel/.*-info'
+    when x.comma_separated[4] ~ '/medic/form.*' then '~/medic/form.*'
+    when x.comma_separated[4] ~ '/medic/resources.*' then '~/medic/resources.*'
+    else substring(x.comma_separated[4] FROM '^([^\?]*).*')
+  end,
   request_source = x.comma_separated[5]::varchar(8),
   username = x.comma_separated[6]::varchar(256),
   bytes_read = x.comma_separated[8]::integer,
   response_time = x.comma_separated[9]::integer,
   res_header_0_what_is_this = case 
-  	when x.comma_separated[10] = '-' then null
-  	else x.comma_separated[10]::integer
+    when x.comma_separated[10] = '-' then null
+    else x.comma_separated[10]::integer
   end,
   user_agent = case 
     when x.comma_separated[11] = '''-''' then null
     else x.comma_separated[11]::text
   end
 from (
-	select
-	  id,
-	  raw,
-	  string_to_array(raw, ',') as comma_separated
-	from haproxy
-	where
-	  raw like 'May %' and
+  select
+    id,
+    raw,
+    string_to_array(raw, ',') as comma_separated
+  from haproxy
+  where
+    raw like 'May %' and
     raw not like '%Proxy % stopped%'
 ) x
 where haproxy.id = x.id

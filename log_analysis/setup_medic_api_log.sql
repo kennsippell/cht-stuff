@@ -13,11 +13,11 @@ CREATE TABLE medic_api_log (
   express_queue int
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_exchange ON medic_api_log USING btree(exchange);
-CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_request_id ON medic_api_log USING btree(request_id);
-CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_remote_ip ON medic_api_log USING btree(ip);
-CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_url_bucket ON medic_api_log USING btree(url_bucket);
-CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_status ON medic_api_log USING btree(status);
+CREATE INDEX IF NOT EXISTS medic_api_log_idx_exchange ON medic_api_log USING btree(exchange);
+CREATE INDEX IF NOT EXISTS medic_api_log_idx_request_id ON medic_api_log USING btree(request_id);
+CREATE INDEX IF NOT EXISTS medic_api_log_idx_remote_ip ON medic_api_log USING btree(ip);
+CREATE INDEX IF NOT EXISTS medic_api_log_idx_url_bucket ON medic_api_log USING btree(url_bucket);
+CREATE INDEX IF NOT EXISTS medic_api_log_idx_status ON medic_api_log USING btree(status);
 
 -- import mapping to raw column
 

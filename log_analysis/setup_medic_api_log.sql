@@ -13,6 +13,12 @@ CREATE TABLE medic_api_log (
   express_queue int
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_exchange ON medic_api_log USING btree(exchange);
+CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_request_id ON medic_api_log USING btree(request_id);
+CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_remote_ip ON medic_api_log USING btree(ip);
+CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_url_bucket ON medic_api_log USING btree(url_bucket);
+CREATE UNIQUE INDEX IF NOT EXISTS medic_api_log_idx_status ON medic_api_log USING btree(status);
+
 -- import mapping to raw column
 
 delete from medic_api_log where raw not like '% REQ %' and raw not like '% RES %';
@@ -38,6 +44,8 @@ set
     when url ~ 'medic-user-.*-meta/_revs_diff.*' then 'medic-user-.*-meta/_revs_diff.*'
     when url ~ 'medic-user-.*-meta/_changes.*' then 'medic-user-.*-meta/_changes.*'
     when url ~ 'medic-user-.*-meta' then 'medic-user-.*-meta'
+    when url ~ '/medic-purged-role-.*' then '/medic-purged-role-.*'
+    when url ~ '/medic/[a-zA-Z0-9\-]{36}' then '/medic/[a-zA-Z0-9\-]{36}'
     when url ~ '/medic/_local/.*' then '/medic/_local/.*'
     when url ~ 'medic/.*/content' then 'medic/.*/content'
     when url ~ 'medic/form%3.*' then 'medic/form%3.*'

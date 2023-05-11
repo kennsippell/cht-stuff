@@ -1,20 +1,20 @@
-DROP TABLE haproxy_queue;
-CREATE TABLE haproxy_queue (
+DROP TABLE couchdb_queue;
+CREATE TABLE couchdb_queue (
   id SERIAL PRIMARY KEY,
-  haproxy_id integer,
+  couchdb_id integer,
   created timestamp,
   exchange varchar(3),
   queued integer,
-  constraint fk_haproxy_id
-    foreign key(haproxy_id) references haproxy(id)
+  constraint fk_couchdb_id
+    foreign key(couchdb_id) references couchdb_log(id)
 );
 
-insert into haproxy_queue (haproxy_id, created, exchange)
+insert into couchdb_queue (couchdb_id, created, exchange)
   select 
-    id as haproxy_id,
+    id as couchdb_id,
     created - make_interval(0, 0, 0, 0, 0, 0, response_time / 1000::double precision) as created,
     'REQ' as exchange
-  from haproxy
+  from couchdb_log
   where created is not null and response_time is not null
 
   union all 
@@ -23,11 +23,11 @@ insert into haproxy_queue (haproxy_id, created, exchange)
     id,
     created,
     'RES'
-  from haproxy
+  from couchdb_log
   where created is not null and response_time is not null
 ;
 
-update haproxy_queue
+update couchdb_queue
 set
   queued = x.queued
 from (
@@ -38,8 +38,8 @@ from (
         when exchange = 'REQ' then 1
         else -1
       end
-    ) over (order by created asc, haproxy_id asc rows between unbounded preceding and current row) as queued
-  from haproxy_queue
+    ) over (order by created asc, couchdb_id asc rows between unbounded preceding and current row) as queued
+  from couchdb_queue
 ) x
-where haproxy_queue.id = x.id
+where couchdb_queue.id = x.id
 ;

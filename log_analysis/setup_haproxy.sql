@@ -1,4 +1,4 @@
-CREATE TABLE haproxy (
+CREATE TABLE haproxy_log (
   id SERIAL PRIMARY KEY,
   raw text,
   created timestamp,
@@ -14,9 +14,9 @@ CREATE TABLE haproxy (
   user_agent text
 );
 
--- import mapping to raw column. set invalid delimiter
+-- import mapping to raw column. set invalid delimiter, set quote character to nothing, set escape character to nothing
 
-update haproxy
+update haproxy_log
 set
   created = to_timestamp(
     -- no year in the logged date?
@@ -59,10 +59,10 @@ from (
     id,
     raw,
     string_to_array(raw, ',') as comma_separated
-  from haproxy
+  from haproxy_log
   where
     raw like 'May %' and
     raw not like '%Proxy % stopped%'
 ) x
-where haproxy.id = x.id
+where haproxy_log.id = x.id
 ;

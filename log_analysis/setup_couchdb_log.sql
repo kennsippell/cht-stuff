@@ -38,6 +38,8 @@ set
     when url ~ '\/medic\/[a-zA-Z0-9\-]{36}\/content' then '\/medic\/[a-zA-Z0-9\-]{36}\/content'
     when url ~ '\/medic\/[a-zA-Z0-9\-]{36}' then '/medic/[a-zA-Z0-9\-]{36}'
     when url ~ '/medic/_local/.*' then '/medic/_local/.*'
+    when url ~ '/medic/_changes\?.*filter=.*' then '/medic/_changes w/ filter'
+	    when url ~ '/medic/_changes.*' then '/medic/_changes w/o filter'
     when url ~ '/_users/.*' then '/_users/.*'
     when url ~ 'medic-user-.*-meta.*' then 'medic-user-.*-meta.*'
     when url ~ '/medic-users-meta/_local/.*' then '/medic-users-meta/_local/.*'

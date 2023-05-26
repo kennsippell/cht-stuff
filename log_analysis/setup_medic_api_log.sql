@@ -44,6 +44,8 @@ set
     when url ~ 'medic-user-.*-meta/_revs_diff.*' then 'medic-user-.*-meta/_revs_diff.*'
     when url ~ 'medic-user-.*-meta/_changes.*' then 'medic-user-.*-meta/_changes.*'
     when url ~ 'medic-user-.*-meta' then 'medic-user-.*-meta'
+    when url ~ '/medic/_changes\?.*longpoll=.*' then '/medic/_changes w/ longpoll'
+	  when url ~ '/medic/_changes.*' then '/medic/_changes w/o longpoll'
     when url ~ '/medic-purged-role-.*' then '/medic-purged-role-.*'
     when url ~ '/medic/[a-zA-Z0-9\-]{36}' then '/medic/[a-zA-Z0-9\-]{36}'
     when url ~ '/medic/_local/.*' then '/medic/_local/.*'

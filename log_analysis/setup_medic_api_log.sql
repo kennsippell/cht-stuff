@@ -10,6 +10,7 @@ CREATE TABLE medic_api_log (
   url_bucket text,
   status smallint,
   response_time real,
+  total_time real,
   express_queue int
 );
 
@@ -44,8 +45,9 @@ set
     when url ~ 'medic-user-.*-meta/_revs_diff.*' then 'medic-user-.*-meta/_revs_diff.*'
     when url ~ 'medic-user-.*-meta/_changes.*' then 'medic-user-.*-meta/_changes.*'
     when url ~ 'medic-user-.*-meta' then 'medic-user-.*-meta'
-    when url ~ '/medic/_changes\?.*longpoll=.*' then '/medic/_changes w/ longpoll'
-	  when url ~ '/medic/_changes.*' then '/medic/_changes w/o longpoll'
+    when url ~ '/medic/_changes\?.*longpoll.*' then '/medic/_changes (longpoll)'
+    when url ~ '/medic/_changes\?.*timeout=600000.*style.*heartbeat.*since.*limit=100' then '/medic/_changes (offline)'
+    when url ~ '/medic/_changes.*' then '/medic/_changes (other)'
     when url ~ '/medic-purged-role-.*' then '/medic-purged-role-.*'
     when url ~ '/medic/[a-zA-Z0-9\-]{36}' then '/medic/[a-zA-Z0-9\-]{36}'
     when url ~ '/medic/_local/.*' then '/medic/_local/.*'
@@ -68,4 +70,29 @@ from (
   from medic_api_log
 ) x
 where medic_api_log.id = x.id
+;
+
+-- response_time is time for response headers to be written. for many requests, this is an okay approximation.
+-- but for requests liked _changes, it is a totally wrong. we really want morgan's total-time metric
+-- 
+-- to approximate total-time, use the time between the REQ and RES log events. unfortunately, the precision of
+-- these events is in seconds.
+update medic_api_log
+set
+  total_time = case
+    -- use log events if there is no response ('-')
+    when x.response_time is null then x.delta_in_ms
+    -- use log events if it off by more than the 1sec precision
+    when x.delta_in_ms > x.response_time + 1000 then x.delta_in_ms
+    else x.response_time
+  end
+from (
+  select
+    max(id) as response_id,
+    max(response_time) as response_time,
+    extract (epoch from (max(created) - min(created))) * 1000 as delta_in_ms
+  from medic_api_log
+  group by request_id
+) x
+where medic_api_log.id = x.response_id
 ;

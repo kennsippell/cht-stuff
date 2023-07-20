@@ -1,20 +1,20 @@
 
 with monthly_cht_effort as (
-	select
-	--  username,
-	  date_trunc('month', period_start) as monthyear,
-	  SUM(count) as cht_effort
-	FROM useview_telemetry
-	WHERE
-	  metric in (
+  select
+  --  username,
+    date_trunc('month', period_start) as monthyear,
+    SUM(count) as cht_effort
+  FROM useview_telemetry
+  WHERE
+    metric in (
       'tasks:load',
       'tasks:refresh',
       'analytics:targets:load',
       'search:contacts:types',
       'search:reports'
-	  )
-	group by 1
-	order by 1
+    )
+  group by 1
+  order by 1
 ),
 
 log_events as (

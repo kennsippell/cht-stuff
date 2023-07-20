@@ -1,19 +1,19 @@
 with 
   monthly_cht_effort as (
-	select
-	  username,
-	  SUM(count) as cht_effort
-	FROM useview_telemetry
-	WHERE
-	  metric in (
+  select
+    username,
+    SUM(count) as cht_effort
+  FROM useview_telemetry
+  WHERE
+    metric in (
       'tasks:load',
       'tasks:refresh',
       'analytics:targets:load',
       'search:contacts:types',
       'search:reports'
-	  )
-	and period_start > '2022-10-01'::timestamptz 
-	group by 1
+    )
+  and period_start > '2022-10-01'::timestamptz 
+  group by 1
 ),
 
 log_events as (
@@ -62,21 +62,21 @@ latest_user_telemetry as (
 ),
 
 user_details as (
-	select
-	  monthly_cht_effort.username,
-	  coalesce(global_failure_count, 0) as global_failure_count,
-	  cht_effort,
-	  coalesce(latest_user_telemetry.doc_count::int, 0) / 1000 doc_count_thousands,
-	  cht_android,
+  select
+    monthly_cht_effort.username,
+    coalesce(global_failure_count, 0) as global_failure_count,
+    cht_effort,
+    coalesce(latest_user_telemetry.doc_count::int, 0) / 1000 doc_count_thousands,
+    cht_android,
       model,
       chrome_version,
       hardwareConcurrency
-	from monthly_cht_effort
-	left join log_events
-	  on monthly_cht_effort.username = log_events.username
-	left join latest_user_telemetry
-	  on monthly_cht_effort.username = latest_user_telemetry.username
-	order by 1
+  from monthly_cht_effort
+  left join log_events
+    on monthly_cht_effort.username = log_events.username
+  left join latest_user_telemetry
+    on monthly_cht_effort.username = latest_user_telemetry.username
+  order by 1
 )
 
 select 

@@ -7,7 +7,7 @@ SELECT
   COALESCE(
     COUNT(*) FILTER(WHERE device_id IS NOT NULL)
   , 0) AS count_initial_replications
-FROM dates	
+FROM dates  
 LEFT JOIN useview_telemetry_devices ON dates.date = period_start
 GROUP BY 1
 ORDER BY 1 ASC

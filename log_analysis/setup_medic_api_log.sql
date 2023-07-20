@@ -5,7 +5,7 @@ CREATE TABLE medic_api_log (
   exchange varchar(3),
   request_id varchar(40),
   ip varchar(16),
-  method varchar(6),
+  method varchar(8), -- PROPFIND
   url text,
   url_bucket text,
   status smallint,
@@ -22,14 +22,18 @@ CREATE INDEX IF NOT EXISTS medic_api_log_idx_status ON medic_api_log USING btree
 
 -- import mapping to raw column
 
-delete from medic_api_log where raw not like '% REQ %' and raw not like '% RES %';
+delete from medic_api_log
+where 
+  (raw not like '% REQ %' and raw not like '% RES %')
+  or raw like '%object Object%' -- datetime can show as Javascript object
+;
 
 update medic_api_log
 set
   created = x.parsed[1]::timestamp,
   exchange = x.parsed[2],
   request_id = x.parsed[3],
-  ip = x.parsed[4],
+  ip = LEFT(x.parsed[4], 16), --jndi:ldap
   method = x.parsed[6],
   url = x.parsed[7],
   status = case

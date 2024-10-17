@@ -1,0 +1,1 @@
+curl -X POST https://medic:pwd@nairobi.echis.go.ke/_users/_find -H 'Content-Type: application/json' -d '{ "selector": { "facility_id": "04bef0ba-d8c9-55cc-bf36-c4b9a285d4e1" } }'

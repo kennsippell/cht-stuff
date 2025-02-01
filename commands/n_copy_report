@@ -1,1 +1,0 @@
-curl -X POST https://medic:72d9ed4e-8556-41d1-b30f-f165280c3b7f@chis-training.health.go.ke/medic/test1 -H "Content-Type: application/json" --data-binary "@/home/kenn/cht-stuff/commands/report.json"
